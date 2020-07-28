@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 @Repository
 public class EmployeeRepository {
-    private List<Employee> employees = new ArrayList<>();
+    private final List<Employee> employees = new ArrayList<>();
 
     @PostConstruct
     private void addEmployees() {

@@ -48,4 +48,8 @@ public class CompanyRepository {
         companies.add(company);
         return company;
     }
+
+    public void delete(Company company) {
+        companies.remove(company);
+    }
 }

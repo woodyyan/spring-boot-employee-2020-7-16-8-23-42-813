@@ -5,7 +5,6 @@ import com.thoughtworks.springbootemployee.model.Employee;
 import com.thoughtworks.springbootemployee.repository.CompanyRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -32,9 +31,9 @@ public class CompanyService {
         return companyRepository.add(company);
     }
 
-    public void deleteEmployeesInCompany(Integer companyId) {
+    public void deleteCompany(Integer companyId) {
         Company company = companyRepository.findById(companyId);
-        company.setEmployees(new ArrayList<>());
+        companyRepository.delete(company);
     }
 
     public Company update(Integer companyId, Company companyUpdate) {

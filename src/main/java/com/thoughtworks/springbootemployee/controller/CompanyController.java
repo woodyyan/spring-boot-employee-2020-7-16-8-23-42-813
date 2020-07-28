@@ -3,7 +3,6 @@ package com.thoughtworks.springbootemployee.controller;
 import com.thoughtworks.springbootemployee.model.Company;
 import com.thoughtworks.springbootemployee.model.Employee;
 import com.thoughtworks.springbootemployee.service.CompanyService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -57,8 +56,8 @@ public class CompanyController {
     }
 
     @DeleteMapping("/{companyId}")
-    public void deleteEmployeesInCompany(@PathVariable Integer companyId) {
-        companyService.deleteEmployeesInCompany(companyId);
+    public void deleteCompany(@PathVariable Integer companyId) {
+        companyService.deleteCompany(companyId);
     }
 
     @PutMapping("/{companyId}")

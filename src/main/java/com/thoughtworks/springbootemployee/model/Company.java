@@ -1,18 +1,26 @@
 package com.thoughtworks.springbootemployee.model;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.util.List;
 
+@Entity
 public class Company {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String companyName;
     private Integer employeeNumber;
-    private List<Employee> employees;
+
+    public Company() {
+    }
 
     public Company(Integer id, String companyName, Integer employeeNumber, List<Employee> employees) {
         this.id = id;
         this.companyName = companyName;
         this.employeeNumber = employeeNumber;
-        this.employees = employees;
     }
 
     public Integer getId() {
@@ -37,13 +45,5 @@ public class Company {
 
     public void setEmployeeNumber(Integer employeeNumber) {
         this.employeeNumber = employeeNumber;
-    }
-
-    public List<Employee> getEmployees() {
-        return employees;
-    }
-
-    public void setEmployees(List<Employee> employees) {
-        this.employees = employees;
     }
 }

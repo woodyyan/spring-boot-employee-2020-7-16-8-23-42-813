@@ -15,17 +15,19 @@ public class Employee {
     private String name;
     private Integer age;
     private String gender;
+    private Integer salary;
     private Integer companyId;
 
     public Employee() {
 
     }
 
-    public Employee(int id, String name, int age, String gender) {
+    public Employee(int id, String name, int age, String gender, Integer salary) {
         this.id = id;
         this.name = name;
         this.age = age;
         this.gender = gender;
+        this.salary = salary;
     }
 
     public Integer getId() {
@@ -66,5 +68,13 @@ public class Employee {
 
     public void setCompanyId(Integer companyId) {
         this.companyId = companyId;
+    }
+
+    public Integer getSalary() {
+        return salary;
+    }
+
+    public void setSalary(Integer salary) {
+        this.salary = salary;
     }
 }

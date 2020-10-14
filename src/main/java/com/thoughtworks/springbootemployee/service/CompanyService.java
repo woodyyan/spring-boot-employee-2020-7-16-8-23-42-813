@@ -1,5 +1,6 @@
 package com.thoughtworks.springbootemployee.service;
 
+import com.thoughtworks.springbootemployee.exception.CompanyNotFoundException;
 import com.thoughtworks.springbootemployee.mapper.CompanyMapper;
 import com.thoughtworks.springbootemployee.model.Company;
 import com.thoughtworks.springbootemployee.model.CompanyResponse;
@@ -19,27 +20,32 @@ import java.util.stream.Collectors;
 public class CompanyService {
     private final CompanyRepository companyRepository;
     private final EmployeeRepository employeeRepository;
-    private CompanyMapper companyMapper;
+    private final CompanyMapper companyMapper;
 
-    public CompanyService(CompanyRepository companyRepository, EmployeeRepository employeeRepository) {
+    public CompanyService(CompanyRepository companyRepository, EmployeeRepository employeeRepository, CompanyMapper companyMapper) {
         this.companyRepository = companyRepository;
         this.employeeRepository = employeeRepository;
+        this.companyMapper = companyMapper;
     }
 
     public List<CompanyResponse> getAll() {
         List<Company> companies = companyRepository.findAll();
-        return companies.stream().map(company -> companyMapper.toResponse(company)).collect(Collectors.toList());
+        return companies.stream().map(companyMapper::toResponse).collect(Collectors.toList());
     }
 
     public Page<CompanyResponse> getAll(Integer page, Integer pageSize) {
         Page<Company> companies = companyRepository.findAll(PageRequest.of(page, pageSize));
         List<CompanyResponse> responses = companies.getContent().stream()
-            .map(company -> companyMapper.toResponse(company)).collect(Collectors.toList());
+            .map(companyMapper::toResponse).collect(Collectors.toList());
         return new PageImpl<>(responses, companies.getPageable(), companies.getTotalElements());
     }
 
-    public Company get(Integer companyId) {
-        return companyRepository.findById(companyId).orElse(null);
+    public CompanyResponse get(Integer companyId) {
+        Company company = companyRepository.findById(companyId).orElse(null);
+        if (company != null) {
+            return companyMapper.toResponse(company);
+        }
+        throw new CompanyNotFoundException("Company Id Not Found.");
     }
 
     public Company create(Company company) {

@@ -42,7 +42,7 @@ public class CompanyController {
     }
 
     @GetMapping("/{companyId}")
-    public Company get(@PathVariable Integer companyId) {
+    public CompanyResponse get(@PathVariable Integer companyId) {
         return companyService.get(companyId);
     }
 

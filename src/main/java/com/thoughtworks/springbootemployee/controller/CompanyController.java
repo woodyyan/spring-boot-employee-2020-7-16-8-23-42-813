@@ -34,7 +34,7 @@ public class CompanyController {
     }
 
     @GetMapping(params = {"page", "pageSize"})
-    public Page<Company> getAll(
+    public Page<CompanyResponse> getAll(
         @RequestParam(required = false) Integer page,
         @RequestParam(required = false) Integer pageSize
     ) {

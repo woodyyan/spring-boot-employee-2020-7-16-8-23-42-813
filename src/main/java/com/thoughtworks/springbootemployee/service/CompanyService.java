@@ -7,6 +7,7 @@ import com.thoughtworks.springbootemployee.model.Employee;
 import com.thoughtworks.springbootemployee.repository.CompanyRepository;
 import com.thoughtworks.springbootemployee.repository.EmployeeRepository;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -30,8 +31,11 @@ public class CompanyService {
         return companies.stream().map(company -> companyMapper.toResponse(company)).collect(Collectors.toList());
     }
 
-    public Page<Company> getAll(Integer page, Integer pageSize) {
-        return companyRepository.findAll(PageRequest.of(page, pageSize));
+    public Page<CompanyResponse> getAll(Integer page, Integer pageSize) {
+        Page<Company> companies = companyRepository.findAll(PageRequest.of(page, pageSize));
+        List<CompanyResponse> responses = companies.getContent().stream()
+            .map(company -> companyMapper.toResponse(company)).collect(Collectors.toList());
+        return new PageImpl<>(responses, companies.getPageable(), companies.getTotalElements());
     }
 
     public Company get(Integer companyId) {

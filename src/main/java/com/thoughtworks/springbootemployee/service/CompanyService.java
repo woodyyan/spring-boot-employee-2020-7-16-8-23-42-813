@@ -3,6 +3,7 @@ package com.thoughtworks.springbootemployee.service;
 import com.thoughtworks.springbootemployee.exception.CompanyNotFoundException;
 import com.thoughtworks.springbootemployee.mapper.CompanyMapper;
 import com.thoughtworks.springbootemployee.model.Company;
+import com.thoughtworks.springbootemployee.model.CompanyRequest;
 import com.thoughtworks.springbootemployee.model.CompanyResponse;
 import com.thoughtworks.springbootemployee.model.Employee;
 import com.thoughtworks.springbootemployee.repository.CompanyRepository;
@@ -48,8 +49,9 @@ public class CompanyService {
         throw new CompanyNotFoundException("Company Id Not Found.");
     }
 
-    public Company create(Company company) {
-        return companyRepository.save(company);
+    public CompanyResponse create(CompanyRequest company) {
+        Company savedCompany = companyRepository.save(companyMapper.toEntity(company));
+        return companyMapper.toResponse(savedCompany);
     }
 
     public void deleteCompany(Integer companyId) {
@@ -57,17 +59,18 @@ public class CompanyService {
         company.ifPresent(companyRepository::delete);
     }
 
-    public Company update(Integer companyId, Company companyUpdate) {
+    public CompanyResponse update(Integer companyId, CompanyRequest updatingCompany) {
         Company company = companyRepository.findById(companyId).orElse(null);
         if (company != null) {
-            if (companyUpdate.getCompanyName() != null) {
-                company.setCompanyName(companyUpdate.getCompanyName());
+            if (updatingCompany.getCompanyName() != null) {
+                company.setCompanyName(updatingCompany.getCompanyName());
             }
-            if (companyUpdate.getEmployeeNumber() != null) {
-                company.setEmployeeNumber(companyUpdate.getEmployeeNumber());
+            if (updatingCompany.getEmployeeNumber() != null) {
+                company.setEmployeeNumber(updatingCompany.getEmployeeNumber());
             }
+            return companyMapper.toResponse(company);
         }
-        return company;
+        throw new CompanyNotFoundException("Company Id Not Found.");
     }
 
     public List<Employee> getEmployees(Integer companyId) {

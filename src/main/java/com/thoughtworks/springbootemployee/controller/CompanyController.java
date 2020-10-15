@@ -1,6 +1,6 @@
 package com.thoughtworks.springbootemployee.controller;
 
-import com.thoughtworks.springbootemployee.model.Company;
+import com.thoughtworks.springbootemployee.model.CompanyRequest;
 import com.thoughtworks.springbootemployee.model.CompanyResponse;
 import com.thoughtworks.springbootemployee.model.Employee;
 import com.thoughtworks.springbootemployee.service.CompanyService;
@@ -53,8 +53,8 @@ public class CompanyController {
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
-    public Company create(@RequestBody Company company) {
-        return companyService.create(company);
+    public CompanyResponse create(@RequestBody CompanyRequest companyRequest) {
+        return companyService.create(companyRequest);
     }
 
     @DeleteMapping("/{companyId}")
@@ -63,7 +63,7 @@ public class CompanyController {
     }
 
     @PutMapping("/{companyId}")
-    public Company update(@PathVariable Integer companyId, @RequestBody Company company) {
-        return companyService.update(companyId, company);
+    public CompanyResponse update(@PathVariable Integer companyId, @RequestBody CompanyRequest companyRequest) {
+        return companyService.update(companyId, companyRequest);
     }
 }

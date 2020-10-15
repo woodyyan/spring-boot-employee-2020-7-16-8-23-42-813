@@ -101,4 +101,16 @@ class EmployeeServiceTest {
         Assertions.assertEquals(1, response.getId());
         Assertions.assertEquals("Tom", response.getName());
     }
+
+    @Test
+    void should_get_employee_by_gender_given_gender() {
+        EmployeeRepository repository = Mockito.mock(EmployeeRepository.class);
+        EmployeeService service = new EmployeeService(repository, new EmployeeMapper());
+
+        Mockito.when(repository.findAllByGender("Male")).thenReturn(asList(new Employee(), new Employee()));
+
+        List<EmployeeResponse> responses = service.getByGender("Male");
+
+        Assertions.assertEquals(2, responses.size());
+    }
 }

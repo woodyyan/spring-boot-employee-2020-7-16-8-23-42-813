@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
 
@@ -30,8 +31,7 @@ class EmployeeServiceTest {
     @Test
     void should_get_all_employees_given_page_number_and_size() {
         EmployeeRepository repository = Mockito.mock(EmployeeRepository.class);
-        EmployeeMapper mapper = Mockito.mock(EmployeeMapper.class);
-        EmployeeService service = new EmployeeService(repository, mapper);
+        EmployeeService service = new EmployeeService(repository, new EmployeeMapper());
         int page = 1;
         int size = 10;
         List<Employee> employees = asList(new Employee(), new Employee());
@@ -44,5 +44,18 @@ class EmployeeServiceTest {
         Assertions.assertEquals(10, employeeResponses.getSize());
         Assertions.assertEquals(1, employeeResponses.getNumber());
         Assertions.assertEquals(2, employeeResponses.getContent().size());
+    }
+
+    @Test
+    void should_get_employee_given_employee_id() {
+        EmployeeRepository repository = Mockito.mock(EmployeeRepository.class);
+        EmployeeService service = new EmployeeService(repository, new EmployeeMapper());
+
+        Mockito.when(repository.findById(1)).thenReturn(Optional.of(new Employee(1, "Tom", 18, "Male", 1000)));
+
+        EmployeeResponse response = service.get(1);
+
+        Assertions.assertEquals(1, response.getId());
+        Assertions.assertEquals("Tom", response.getName());
     }
 }

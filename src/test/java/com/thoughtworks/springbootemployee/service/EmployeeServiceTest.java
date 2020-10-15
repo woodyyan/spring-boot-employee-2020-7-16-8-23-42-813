@@ -61,7 +61,7 @@ class EmployeeServiceTest {
     }
 
     @Test
-    void should_create_employee_given_employe_request() {
+    void should_create_employee_given_employee_request() {
         EmployeeRepository repository = Mockito.mock(EmployeeRepository.class);
         EmployeeService service = new EmployeeService(repository, new EmployeeMapper());
 

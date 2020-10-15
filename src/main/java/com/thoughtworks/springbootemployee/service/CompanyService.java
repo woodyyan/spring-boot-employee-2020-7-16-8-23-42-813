@@ -2,10 +2,12 @@ package com.thoughtworks.springbootemployee.service;
 
 import com.thoughtworks.springbootemployee.exception.CompanyNotFoundException;
 import com.thoughtworks.springbootemployee.mapper.CompanyMapper;
+import com.thoughtworks.springbootemployee.mapper.EmployeeMapper;
 import com.thoughtworks.springbootemployee.model.Company;
 import com.thoughtworks.springbootemployee.model.CompanyRequest;
 import com.thoughtworks.springbootemployee.model.CompanyResponse;
 import com.thoughtworks.springbootemployee.model.Employee;
+import com.thoughtworks.springbootemployee.model.EmployeeResponse;
 import com.thoughtworks.springbootemployee.repository.CompanyRepository;
 import com.thoughtworks.springbootemployee.repository.EmployeeRepository;
 import org.springframework.data.domain.Page;
@@ -22,11 +24,16 @@ public class CompanyService {
     private final CompanyRepository companyRepository;
     private final EmployeeRepository employeeRepository;
     private final CompanyMapper companyMapper;
+    private final EmployeeMapper employeeMapper;
 
-    public CompanyService(CompanyRepository companyRepository, EmployeeRepository employeeRepository, CompanyMapper companyMapper) {
+    public CompanyService(CompanyRepository companyRepository,
+                          EmployeeRepository employeeRepository,
+                          CompanyMapper companyMapper,
+                          EmployeeMapper employeeMapper) {
         this.companyRepository = companyRepository;
         this.employeeRepository = employeeRepository;
         this.companyMapper = companyMapper;
+        this.employeeMapper = employeeMapper;
     }
 
     public List<CompanyResponse> getAll() {
@@ -73,7 +80,8 @@ public class CompanyService {
         throw new CompanyNotFoundException("Company Id Not Found.");
     }
 
-    public List<Employee> getEmployees(Integer companyId) {
-        return employeeRepository.findAllByCompanyId(companyId);
+    public List<EmployeeResponse> getEmployees(Integer companyId) {
+        List<Employee> employees = employeeRepository.findAllByCompanyId(companyId);
+        return employees.stream().map(employeeMapper::toResponse).collect(Collectors.toList());
     }
 }

@@ -1,6 +1,8 @@
 package com.thoughtworks.springbootemployee.controller;
 
 import com.thoughtworks.springbootemployee.model.Employee;
+import com.thoughtworks.springbootemployee.model.EmployeeRequest;
+import com.thoughtworks.springbootemployee.model.EmployeeResponse;
 import com.thoughtworks.springbootemployee.service.EmployeeService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -27,12 +29,12 @@ public class EmployeeController {
     }
 
     @GetMapping
-    public List<Employee> getAll() {
+    public List<EmployeeResponse> getAll() {
         return employeeService.getAll();
     }
 
     @GetMapping(params = {"page", "pageSize"})
-    public Page<Employee> getPaginatedAll(
+    public Page<EmployeeResponse> getPaginatedAll(
         @RequestParam(required = false) Integer page,
         @RequestParam(required = false) Integer pageSize
     ) {
@@ -40,19 +42,19 @@ public class EmployeeController {
     }
 
     @GetMapping(params = "gender")
-    public List<Employee> getByGender(@RequestParam String gender) {
+    public List<EmployeeResponse> getByGender(@RequestParam String gender) {
         return employeeService.getByGender(gender);
     }
 
     @GetMapping("/{employeeId}")
-    public Employee get(@PathVariable Integer employeeId) {
+    public EmployeeResponse get(@PathVariable Integer employeeId) {
         return employeeService.get(employeeId);
     }
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
-    public Employee create(@RequestBody Employee employee) {
-        return employeeService.create(employee);
+    public EmployeeResponse create(@RequestBody EmployeeRequest employeeRequest) {
+        return employeeService.create(employeeRequest);
     }
 
     @DeleteMapping("/{employeeId}")
@@ -61,7 +63,7 @@ public class EmployeeController {
     }
 
     @PutMapping("/{employeeId}")
-    public Employee update(@PathVariable Integer employeeId, @RequestBody Employee employee) {
-        return employeeService.update(employeeId, employee);
+    public EmployeeResponse update(@PathVariable Integer employeeId, @RequestBody EmployeeRequest employeeRequest) {
+        return employeeService.update(employeeId, employeeRequest);
     }
 }

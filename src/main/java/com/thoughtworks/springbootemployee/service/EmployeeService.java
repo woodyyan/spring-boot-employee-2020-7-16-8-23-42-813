@@ -1,41 +1,52 @@
 package com.thoughtworks.springbootemployee.service;
 
 import com.thoughtworks.springbootemployee.exception.EmployeeNotFoundException;
+import com.thoughtworks.springbootemployee.mapper.EmployeeMapper;
 import com.thoughtworks.springbootemployee.model.Employee;
+import com.thoughtworks.springbootemployee.model.EmployeeRequest;
+import com.thoughtworks.springbootemployee.model.EmployeeResponse;
 import com.thoughtworks.springbootemployee.repository.EmployeeRepository;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class EmployeeService {
     private final EmployeeRepository employeeRepository;
+    private final EmployeeMapper employeeMapper;
 
-    public EmployeeService(EmployeeRepository employeeRepository) {
+    public EmployeeService(EmployeeRepository employeeRepository, EmployeeMapper employeeMapper) {
         this.employeeRepository = employeeRepository;
+        this.employeeMapper = employeeMapper;
     }
 
-    public List<Employee> getAll() {
-        return employeeRepository.findAll();
+    public List<EmployeeResponse> getAll() {
+        List<Employee> employees = employeeRepository.findAll();
+        return employees.stream().map(employeeMapper::toResponse).collect(Collectors.toList());
     }
 
-    public Page<Employee> getAll(Integer page, Integer pageSize) {
-        return employeeRepository.findAll(PageRequest.of(page, pageSize));
+    public Page<EmployeeResponse> getAll(Integer page, Integer pageSize) {
+        Page<Employee> employees = employeeRepository.findAll(PageRequest.of(page, pageSize));
+        List<EmployeeResponse> responses = employees.getContent().stream().map(employeeMapper::toResponse).collect(Collectors.toList());
+        return new PageImpl<>(responses, employees.getPageable(), employees.getTotalElements());
     }
 
-    public Employee get(Integer employeeId) {
+    public EmployeeResponse get(Integer employeeId) {
         Optional<Employee> employee = employeeRepository.findById(employeeId);
         if (employee.isPresent()) {
-            return employee.get();
+            return employeeMapper.toResponse(employee.get());
         }
         throw new EmployeeNotFoundException("Employee ID not found.");
     }
 
-    public Employee create(Employee employee) {
-        return employeeRepository.save(employee);
+    public EmployeeResponse create(EmployeeRequest employeeRequest) {
+        Employee savedEmployee = employeeRepository.save(employeeMapper.toEntity(employeeRequest));
+        return employeeMapper.toResponse(savedEmployee);
     }
 
     public void delete(Integer employeeId) {
@@ -43,23 +54,25 @@ public class EmployeeService {
         employee.ifPresent(employeeRepository::delete);
     }
 
-    public Employee update(Integer employeeId, Employee employeeUpdate) {
+    public EmployeeResponse update(Integer employeeId, EmployeeRequest updatingEmployee) {
         Employee employee = employeeRepository.findById(employeeId).orElse(null);
         if (employee != null) {
-            if (employeeUpdate.getName() != null) {
-                employee.setName(employeeUpdate.getName());
+            if (updatingEmployee.getName() != null) {
+                employee.setName(updatingEmployee.getName());
             }
-            if (employeeUpdate.getAge() != null) {
-                employee.setAge(employeeUpdate.getAge());
+            if (updatingEmployee.getAge() != null) {
+                employee.setAge(updatingEmployee.getAge());
             }
-            if (employeeUpdate.getGender() != null) {
-                employee.setGender(employeeUpdate.getGender());
+            if (updatingEmployee.getGender() != null) {
+                employee.setGender(updatingEmployee.getGender());
             }
+            return employeeMapper.toResponse(employee);
         }
-        return employee;
+        throw new EmployeeNotFoundException("Employee Id Not Found.");
     }
 
-    public List<Employee> getByGender(String gender) {
-        return employeeRepository.findAllByGender(gender);
+    public List<EmployeeResponse> getByGender(String gender) {
+        List<Employee> employees = employeeRepository.findAllByGender(gender);
+        return employees.stream().map(employeeMapper::toResponse).collect(Collectors.toList());
     }
 }

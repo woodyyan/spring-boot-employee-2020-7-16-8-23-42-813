@@ -66,7 +66,8 @@ public class EmployeeService {
             if (updatingEmployee.getGender() != null) {
                 employee.setGender(updatingEmployee.getGender());
             }
-            return employeeMapper.toResponse(employee);
+            Employee updatedEmployee = employeeRepository.save(employee);
+            return employeeMapper.toResponse(updatedEmployee);
         }
         throw new EmployeeNotFoundException("Employee Id Not Found.");
     }

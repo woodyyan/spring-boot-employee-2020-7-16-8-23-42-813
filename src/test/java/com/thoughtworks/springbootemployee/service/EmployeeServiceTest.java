@@ -86,4 +86,19 @@ class EmployeeServiceTest {
 
         Mockito.verify(repository, Mockito.times(1)).delete(Mockito.any(Employee.class));
     }
+
+    @Test
+    void should_update_employee_given_employee_id_and_employee_request() {
+        EmployeeRepository repository = Mockito.mock(EmployeeRepository.class);
+        EmployeeService service = new EmployeeService(repository, new EmployeeMapper());
+
+        Mockito.when(repository.findById(1)).thenReturn(Optional.of(new Employee(1, "Jack", 18, "Male", 1000)));
+        Mockito.when(repository.save(Mockito.any(Employee.class))).thenReturn(new Employee(1, "Tom", 18, "Male", 1000));
+
+        EmployeeRequest request = new EmployeeRequest();
+        EmployeeResponse response = service.update(1, request);
+
+        Assertions.assertEquals(1, response.getId());
+        Assertions.assertEquals("Tom", response.getName());
+    }
 }

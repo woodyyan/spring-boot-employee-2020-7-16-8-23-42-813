@@ -1,10 +1,6 @@
 package com.thoughtworks.springbootemployee.controller;
 
 import com.thoughtworks.springbootemployee.model.Employee;
-import com.thoughtworks.springbootemployee.model.EmployeeRequest;
-import com.thoughtworks.springbootemployee.model.EmployeeResponse;
-import com.thoughtworks.springbootemployee.service.EmployeeService;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,53 +13,62 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/employees")
 public class EmployeeController {
-    private final EmployeeService employeeService;
+    private final List<Employee> employees = new ArrayList<>();
 
-    public EmployeeController(EmployeeService employeeService) {
-        this.employeeService = employeeService;
-    }
 
     @GetMapping
-    public List<EmployeeResponse> getAll() {
-        return employeeService.getAll();
+    public List<Employee> getAll() {
+        return employees;
     }
 
     @GetMapping(params = {"page", "pageSize"})
-    public Page<EmployeeResponse> getPaginatedAll(
+    public List<Employee> getPaginatedAll(
         @RequestParam(required = false) Integer page,
         @RequestParam(required = false) Integer pageSize
     ) {
-        return employeeService.getAll(page, pageSize);
+        return employees.stream().skip(pageSize * page).limit(pageSize).collect(Collectors.toList());
     }
 
     @GetMapping(params = "gender")
-    public List<EmployeeResponse> getByGender(@RequestParam String gender) {
-        return employeeService.getByGender(gender);
+    public List<Employee> getByGender(@RequestParam String gender) {
+        return employees.stream().filter(employee -> employee.getGender().equals(gender)).collect(Collectors.toList());
     }
 
     @GetMapping("/{employeeId}")
-    public EmployeeResponse get(@PathVariable Integer employeeId) {
-        return employeeService.get(employeeId);
+    public Employee get(@PathVariable Integer employeeId) {
+        return employees.stream().filter(employee -> employee.getId().equals(employeeId)).findFirst().orElse(null);
     }
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
-    public EmployeeResponse create(@RequestBody EmployeeRequest employeeRequest) {
-        return employeeService.create(employeeRequest);
+    public Employee create(@RequestBody Employee employeeRequest) {
+        employees.add(employeeRequest);
+        return employeeRequest;
     }
 
     @DeleteMapping("/{employeeId}")
     public void delete(@PathVariable Integer employeeId) {
-        employeeService.delete(employeeId);
+        Optional<Employee> deletingEmployee = employees.stream()
+            .filter(employee -> employee.getId().equals(employeeId)).findFirst();
+        deletingEmployee.ifPresent(employees::remove);
     }
 
     @PutMapping("/{employeeId}")
-    public EmployeeResponse update(@PathVariable Integer employeeId, @RequestBody EmployeeRequest employeeRequest) {
-        return employeeService.update(employeeId, employeeRequest);
+    public Employee update(@PathVariable Integer employeeId, @RequestBody Employee employeeRequest) {
+        Optional<Employee> updatingEmployee = employees.stream()
+            .filter(employee -> employee.getId().equals(employeeId)).findFirst();
+        if (updatingEmployee.isPresent()) {
+            employees.remove(updatingEmployee.get());
+            employees.add(employeeRequest);
+        }
+        return employeeRequest;
     }
 }

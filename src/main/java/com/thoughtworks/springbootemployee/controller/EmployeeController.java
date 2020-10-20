@@ -1,8 +1,6 @@
 package com.thoughtworks.springbootemployee.controller;
 
 import com.thoughtworks.springbootemployee.model.Employee;
-import com.thoughtworks.springbootemployee.model.EmployeeRequest;
-import com.thoughtworks.springbootemployee.model.EmployeeResponse;
 import com.thoughtworks.springbootemployee.service.EmployeeService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -29,12 +27,12 @@ public class EmployeeController {
     }
 
     @GetMapping
-    public List<EmployeeResponse> getAll() {
+    public List<Employee> getAll() {
         return employeeService.getAll();
     }
 
     @GetMapping(params = {"page", "pageSize"})
-    public Page<EmployeeResponse> getPaginatedAll(
+    public Page<Employee> getPaginatedAll(
         @RequestParam(required = false) Integer page,
         @RequestParam(required = false) Integer pageSize
     ) {
@@ -42,18 +40,18 @@ public class EmployeeController {
     }
 
     @GetMapping(params = "gender")
-    public List<EmployeeResponse> getByGender(@RequestParam String gender) {
+    public List<Employee> getByGender(@RequestParam String gender) {
         return employeeService.getByGender(gender);
     }
 
     @GetMapping("/{employeeId}")
-    public EmployeeResponse get(@PathVariable Integer employeeId) {
+    public Employee get(@PathVariable Integer employeeId) {
         return employeeService.get(employeeId);
     }
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
-    public EmployeeResponse create(@RequestBody EmployeeRequest employeeRequest) {
+    public Employee create(@RequestBody Employee employeeRequest) {
         return employeeService.create(employeeRequest);
     }
 
@@ -63,7 +61,7 @@ public class EmployeeController {
     }
 
     @PutMapping("/{employeeId}")
-    public EmployeeResponse update(@PathVariable Integer employeeId, @RequestBody EmployeeRequest employeeRequest) {
+    public Employee update(@PathVariable Integer employeeId, @RequestBody Employee employeeRequest) {
         return employeeService.update(employeeId, employeeRequest);
     }
 }

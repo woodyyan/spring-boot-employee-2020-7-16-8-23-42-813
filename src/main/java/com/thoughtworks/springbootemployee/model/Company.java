@@ -5,6 +5,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -13,9 +14,18 @@ public class Company {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String companyName;
-    private Integer employeeNumber;
     @OneToMany(mappedBy = "companyId")
     private List<Employee> employees;
+
+    public Company() {
+        employees = new ArrayList<>();
+    }
+
+    public Company(Integer id, String companyName, List<Employee> employees) {
+        this.id = id;
+        this.companyName = companyName;
+        this.employees = employees;
+    }
 
     public List<Employee> getEmployees() {
         return employees;
@@ -23,15 +33,6 @@ public class Company {
 
     public void setEmployees(List<Employee> employees) {
         this.employees = employees;
-    }
-
-    public Company() {
-    }
-
-    public Company(Integer id, String companyName, Integer employeeNumber, List<Employee> employees) {
-        this.id = id;
-        this.companyName = companyName;
-        this.employeeNumber = employeeNumber;
     }
 
     public Integer getId() {
@@ -48,13 +49,5 @@ public class Company {
 
     public void setCompanyName(String companyName) {
         this.companyName = companyName;
-    }
-
-    public Integer getEmployeeNumber() {
-        return employeeNumber;
-    }
-
-    public void setEmployeeNumber(Integer employeeNumber) {
-        this.employeeNumber = employeeNumber;
     }
 }

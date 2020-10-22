@@ -8,14 +8,6 @@ public class CompanyResponse {
     private Integer employeeNumber;
     private List<Employee> employees;
 
-    public List<Employee> getEmployees() {
-        return employees;
-    }
-
-    public void setEmployees(List<Employee> employees) {
-        this.employees = employees;
-    }
-
     public CompanyResponse() {
     }
 
@@ -23,6 +15,15 @@ public class CompanyResponse {
         this.id = id;
         this.companyName = companyName;
         this.employeeNumber = employeeNumber;
+        this.employees = employees;
+    }
+
+    public List<Employee> getEmployees() {
+        return employees;
+    }
+
+    public void setEmployees(List<Employee> employees) {
+        this.employees = employees;
     }
 
     public Integer getId() {

@@ -72,9 +72,6 @@ public class CompanyService {
             if (updatingCompany.getCompanyName() != null) {
                 company.setCompanyName(updatingCompany.getCompanyName());
             }
-            if (updatingCompany.getEmployeeNumber() != null) {
-                company.setEmployeeNumber(updatingCompany.getEmployeeNumber());
-            }
             return companyMapper.toResponse(company);
         }
         throw new CompanyNotFoundException("Company Id Not Found.");

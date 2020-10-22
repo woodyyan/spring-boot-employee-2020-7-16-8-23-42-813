@@ -12,14 +12,15 @@ public class CompanyMapper {
 
         // Manually
         response.setCompanyName(company.getCompanyName());
-        response.setEmployeeNumber(company.getEmployeeNumber());
         response.setId(company.getId());
         response.setEmployees(company.getEmployees());
+        response.setEmployeeNumber(company.getEmployees().size());
 
         // BeanUtils
         // BeanUtils.copyProperties(company, response);
+        // response.setEmployeeNumber(company.getEmployees().size());
 
-        return null;
+        return response;
     }
 
     public Company toEntity(CompanyRequest companyRequest) {
@@ -27,7 +28,6 @@ public class CompanyMapper {
 
         // Manually
         company.setCompanyName(companyRequest.getCompanyName());
-        company.setEmployeeNumber(companyRequest.getEmployeeNumber());
 
         // BeanUtils
         // BeanUtils.copyProperties(companyRequest, company);

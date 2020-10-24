@@ -1,4 +1,6 @@
-package com.thoughtworks.springbootemployee.model;
+package com.thoughtworks.springbootemployee.model.dto;
+
+import com.thoughtworks.springbootemployee.model.entity.Employee;
 
 import java.util.List;
 

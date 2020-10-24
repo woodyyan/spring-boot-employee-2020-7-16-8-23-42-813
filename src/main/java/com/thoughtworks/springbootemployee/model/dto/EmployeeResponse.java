@@ -1,16 +1,6 @@
-package com.thoughtworks.springbootemployee.model;
+package com.thoughtworks.springbootemployee.model.dto;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-
-@Entity
-public class Employee {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class EmployeeResponse {
     private Integer id;
     private String name;
     private Integer age;
@@ -18,11 +8,11 @@ public class Employee {
     private Integer salary;
     private Integer companyId;
 
-    public Employee() {
+    public EmployeeResponse() {
 
     }
 
-    public Employee(int id, String name, int age, String gender, Integer salary) {
+    public EmployeeResponse(int id, String name, int age, String gender, Integer salary) {
         this.id = id;
         this.name = name;
         this.age = age;

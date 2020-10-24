@@ -1,4 +1,4 @@
-package com.thoughtworks.springbootemployee.model;
+package com.thoughtworks.springbootemployee.model.dto;
 
 public class CompanyRequest {
     private String companyName;

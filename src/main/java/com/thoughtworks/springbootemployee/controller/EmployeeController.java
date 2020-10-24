@@ -1,10 +1,12 @@
 package com.thoughtworks.springbootemployee.controller;
 
-import com.thoughtworks.springbootemployee.model.Employee;
-import com.thoughtworks.springbootemployee.model.EmployeeRequest;
-import com.thoughtworks.springbootemployee.model.EmployeeResponse;
+import com.thoughtworks.springbootemployee.mapper.EmployeeMapper;
+import com.thoughtworks.springbootemployee.model.dto.EmployeeRequest;
+import com.thoughtworks.springbootemployee.model.dto.EmployeeResponse;
+import com.thoughtworks.springbootemployee.model.entity.Employee;
 import com.thoughtworks.springbootemployee.service.EmployeeService;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,19 +20,22 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/employees")
 public class EmployeeController {
     private final EmployeeService employeeService;
+    private final EmployeeMapper employeeMapper;
 
-    public EmployeeController(EmployeeService employeeService) {
+    public EmployeeController(EmployeeService employeeService, EmployeeMapper employeeMapper) {
         this.employeeService = employeeService;
+        this.employeeMapper = employeeMapper;
     }
 
     @GetMapping
     public List<EmployeeResponse> getAll() {
-        return employeeService.getAll();
+        return employeeService.getAll().stream().map(employeeMapper::toResponse).collect(Collectors.toList());
     }
 
     @GetMapping(params = {"page", "pageSize"})
@@ -38,23 +43,27 @@ public class EmployeeController {
         @RequestParam(required = false) Integer page,
         @RequestParam(required = false) Integer pageSize
     ) {
-        return employeeService.getAll(page, pageSize);
+        Page<Employee> employees = employeeService.getAll(page, pageSize);
+        List<EmployeeResponse> responses = employees.getContent().stream().map(employeeMapper::toResponse).collect(Collectors.toList());
+        return new PageImpl<>(responses, employees.getPageable(), employees.getTotalElements());
     }
 
     @GetMapping(params = "gender")
     public List<EmployeeResponse> getByGender(@RequestParam String gender) {
-        return employeeService.getByGender(gender);
+        return employeeService.getByGender(gender).stream().map(employeeMapper::toResponse).collect(Collectors.toList());
     }
 
     @GetMapping("/{employeeId}")
     public EmployeeResponse get(@PathVariable Integer employeeId) {
-        return employeeService.get(employeeId);
+        Employee employee = employeeService.get(employeeId);
+        return employeeMapper.toResponse(employee);
     }
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
     public EmployeeResponse create(@RequestBody EmployeeRequest employeeRequest) {
-        return employeeService.create(employeeRequest);
+        Employee employee = employeeService.create(employeeMapper.toEntity(employeeRequest));
+        return employeeMapper.toResponse(employee);
     }
 
     @DeleteMapping("/{employeeId}")
@@ -64,6 +73,7 @@ public class EmployeeController {
 
     @PutMapping("/{employeeId}")
     public EmployeeResponse update(@PathVariable Integer employeeId, @RequestBody EmployeeRequest employeeRequest) {
-        return employeeService.update(employeeId, employeeRequest);
+        Employee employee = employeeService.update(employeeId, employeeMapper.toEntity(employeeRequest));
+        return employeeMapper.toResponse(employee);
     }
 }

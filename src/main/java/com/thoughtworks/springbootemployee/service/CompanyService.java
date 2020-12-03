@@ -31,7 +31,7 @@ public class CompanyService {
         return companyRepository.findAll(PageRequest.of(page, pageSize));
     }
 
-    public Company get(Integer companyId) {
+    public Company get(String companyId) {
         return companyRepository.findById(companyId)
             .orElseThrow(() -> new CompanyNotFoundException("Company Id Not Found. Id: " + companyId));
     }
@@ -40,12 +40,12 @@ public class CompanyService {
         return companyRepository.save(company);
     }
 
-    public void deleteCompany(Integer companyId) {
+    public void deleteCompany(String companyId) {
         Optional<Company> company = companyRepository.findById(companyId);
         company.ifPresent(companyRepository::delete);
     }
 
-    public Company update(Integer companyId, Company updatingCompany) {
+    public Company update(String companyId, Company updatingCompany) {
         Company company = companyRepository.findById(companyId).orElse(null);
         if (company != null) {
             if (updatingCompany.getCompanyName() != null) {

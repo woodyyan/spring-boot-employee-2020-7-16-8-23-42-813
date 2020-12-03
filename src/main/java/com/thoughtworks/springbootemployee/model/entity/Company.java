@@ -1,27 +1,23 @@
 package com.thoughtworks.springbootemployee.model.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.MongoId;
+
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
+@Document
 public class Company {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @MongoId
+    private String id;
     private String companyName;
-    @OneToMany(mappedBy = "companyId")
     private List<Employee> employees;
 
     public Company() {
         employees = new ArrayList<>();
     }
 
-    public Company(Integer id, String companyName, List<Employee> employees) {
+    public Company(String id, String companyName, List<Employee> employees) {
         this.id = id;
         this.companyName = companyName;
         this.employees = employees;
@@ -35,11 +31,11 @@ public class Company {
         this.employees = employees;
     }
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 

@@ -49,11 +49,11 @@ class EmployeeServiceTest {
         EmployeeRepository repository = Mockito.mock(EmployeeRepository.class);
         EmployeeService service = new EmployeeService(repository);
 
-        Mockito.when(repository.findById(1)).thenReturn(Optional.of(new Employee(1, "Tom", 18, "Male", 1000)));
+        Mockito.when(repository.findById("1")).thenReturn(Optional.of(new Employee("1", "Tom", 18, "Male", 1000)));
 
-        Employee employee = service.get(1);
+        Employee employee = service.get("1");
 
-        Assertions.assertEquals(1, employee.getId());
+        Assertions.assertEquals("1", employee.getId());
         Assertions.assertEquals("Tom", employee.getName());
     }
 
@@ -62,13 +62,13 @@ class EmployeeServiceTest {
         EmployeeRepository repository = Mockito.mock(EmployeeRepository.class);
         EmployeeService service = new EmployeeService(repository);
 
-        Employee savedEmployee = new Employee(1, "Tom", 18, "Male", 1000);
+        Employee savedEmployee = new Employee("1", "Tom", 18, "Male", 1000);
         Mockito.when(repository.save(Mockito.any(Employee.class))).thenReturn(savedEmployee);
-        Employee request = new Employee(1, "Tom", 18, "Male", 1000);
+        Employee request = new Employee("1", "Tom", 18, "Male", 1000);
 
         Employee employee = service.create(request);
 
-        Assertions.assertEquals(1, employee.getId());
+        Assertions.assertEquals("1", employee.getId());
         Assertions.assertEquals("Tom", employee.getName());
     }
 
@@ -77,9 +77,9 @@ class EmployeeServiceTest {
         EmployeeRepository repository = Mockito.mock(EmployeeRepository.class);
         EmployeeService service = new EmployeeService(repository);
 
-        Mockito.when(repository.findById(1)).thenReturn(Optional.of(new Employee()));
+        Mockito.when(repository.findById("1")).thenReturn(Optional.of(new Employee()));
 
-        service.delete(1);
+        service.delete("1");
 
         Mockito.verify(repository, Mockito.times(1)).delete(Mockito.any(Employee.class));
     }
@@ -89,12 +89,12 @@ class EmployeeServiceTest {
         EmployeeRepository repository = Mockito.mock(EmployeeRepository.class);
         EmployeeService service = new EmployeeService(repository);
 
-        Mockito.when(repository.findById(1)).thenReturn(Optional.of(new Employee(1, "Jack", 18, "Male", 1000)));
-        Mockito.when(repository.save(Mockito.any(Employee.class))).thenReturn(new Employee(1, "Tom", 18, "Male", 1000));
+        Mockito.when(repository.findById("1")).thenReturn(Optional.of(new Employee("1", "Jack", 18, "Male", 1000)));
+        Mockito.when(repository.save(Mockito.any(Employee.class))).thenReturn(new Employee("1", "Tom", 18, "Male", 1000));
 
-        Employee employee = service.update(1, new Employee());
+        Employee employee = service.update("1", new Employee());
 
-        Assertions.assertEquals(1, employee.getId());
+        Assertions.assertEquals("1", employee.getId());
         Assertions.assertEquals("Tom", employee.getName());
     }
 

@@ -55,7 +55,7 @@ public class CompanyController {
     }
 
     @GetMapping("/{companyId}")
-    public CompanyResponse get(@PathVariable Integer companyId) {
+    public CompanyResponse get(@PathVariable String companyId) {
         Company company = companyService.get(companyId);
         return companyMapper.toResponse(company);
     }
@@ -74,12 +74,12 @@ public class CompanyController {
     }
 
     @DeleteMapping("/{companyId}")
-    public void deleteCompany(@PathVariable Integer companyId) {
+    public void deleteCompany(@PathVariable String companyId) {
         companyService.deleteCompany(companyId);
     }
 
     @PutMapping("/{companyId}")
-    public CompanyResponse update(@PathVariable Integer companyId, @RequestBody CompanyRequest companyRequest) {
+    public CompanyResponse update(@PathVariable String companyId, @RequestBody CompanyRequest companyRequest) {
         Company company = companyService.update(companyId, companyMapper.toEntity(companyRequest));
         return companyMapper.toResponse(company);
     }

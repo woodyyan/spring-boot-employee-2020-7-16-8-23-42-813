@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,7 +27,7 @@ public class EmployeeService {
         return employeeRepository.findAll(PageRequest.of(page, pageSize));
     }
 
-    public Employee get(Integer employeeId) {
+    public Employee get(String employeeId) {
         return employeeRepository.findById(employeeId).orElseThrow(() -> new EmployeeNotFoundException("Employee ID not found."));
     }
 
@@ -34,12 +35,12 @@ public class EmployeeService {
         return employeeRepository.save(employeeRequest);
     }
 
-    public void delete(Integer employeeId) {
+    public void delete(String employeeId) {
         Optional<Employee> employee = employeeRepository.findById(employeeId);
         employee.ifPresent(employeeRepository::delete);
     }
 
-    public Employee update(Integer employeeId, Employee updatingEmployee) {
+    public Employee update(String employeeId, Employee updatingEmployee) {
         Employee employee = employeeRepository.findById(employeeId).orElse(null);
         if (employee != null) {
             if (updatingEmployee.getName() != null) {
